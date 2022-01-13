@@ -1,0 +1,103 @@
+1. //New Project
+     ng new sampleapp
+
+   //New Componet [COMPONENT] => [.html - HTML template, .css, .spec.ts - for unit testing, .ts for class file]
+     ng g c user 
+	
+   //New Service [SERVICE] => [.spec.ts and .ts]
+     ng g s services/user 
+
+   //New class [CLASS] => [.spec.ts, .ts]
+     ng g cl services/user  
+
+   //Extras
+     to create new Componet/service/class inside a folder:   ng g c/s/cl main_folder/<name>
+     to stop the creation of spec.ts file use these flags:  [ --spec=false  --s]
+
+2. copy the GET response data from postman request and paste it with datatype in class folder
+
+3. go to service.ts file add below in side the class{}
+     
+     readonly rootURL ="https://jsonplaceholder.typicode.com/posts"
+
+     getusers():Observable<User[]>{
+          return this.http.get<User[]>(this.rootURL);
+     }
+
+     getuser(id:number):Observable<User>{
+          return this.http.get<User>(this.rootURL+"/"+id);
+     }
+
+     adduser(formData:User){
+          return this.http.post(this.rootURL,formData)
+     }
+
+     updateuser(formData:User){
+          return this.http.put(this.rootURL+"/"+formData.id,formData)
+     }
+
+     deleteuser(id:number){
+          return this.http.delete(this.rootURL+"/"+id)
+     }
+
+    inside constructor add these below:     constructor(private http: HttpClient) { }
+    if HttpClient not found add these:          import { HttpClient } from "@angular/common/http";
+    
+4. In user.component.ts file
+     
+     add the service class inside the constructor:  constructor(public service: UserService) { }
+     Declare variables of type (in the model class)
+          alluser:User[];
+          user:User={
+          id: null,
+          userId: null,
+          title: '',
+          body: ''
+          };
+     call menthods from service class
+          ngOnInit(): void {
+               this.service.getusers().subscribe((data:User[])=>{this.alluser=data;});
+          }
+
+          showuser(id):void{
+               this.service.getuser(id).subscribe((data:User)=>{this.user=data;});
+          }
+
+          createuser(formData:User){
+               this.service.adduser(formData).subscribe((data:any)=>{console.log("added user",data)})
+          }
+
+          changeuser(formData:User){
+               this.service.updateuser(formData).subscribe((data:any)=>{console.log("updated user",data)})
+          }
+
+          removeuser(id){
+               this.service.deleteuser(id).subscribe((data:any)=>{console.log("deleted user",data)})
+          }
+
+5. add HttpClient, Form module in imports and add UserService to providers in app.modules.ts
+
+6. add booststrap quickstart link in index.html
+
+7. Go to HTML template of component
+     <form>
+          Id : <input class="form-control" type="numner" [(ngModel)]="user.id" name="id">
+          UserId : <input class="form-control" type="number" [(ngModel)]="user.userId" name="userid">
+          Title : <input class="form-control" type="text" [(ngModel)]="user.title" name="title">
+          Body :<input class="form-control" type="text" [(ngModel)]="user.body" name="body">
+          <input class="btn btn-primary" type="button" value="Add" (click)="createuser(user)">
+          <input class="btn btn-primary" type="button" value="Update" (click)="changeuser(user)">
+          <input class="btn btn-primary" type="reset" value="Reset">
+     </form>
+
+     <tr *ngFor="let i of alluser">
+          <td>{{i.id}}</td>
+          <td>{{i.userId}}</td>
+          <td>{{i.title}}</td>
+          <td>{{i.body}}</td>
+          <td><input type="button" class="btn btn-warning" (click)="showuser(i.id)" value="Update"></td>
+          <td><input type="button" class="btn btn-danger" (click)="removeuser(i.id)" value="Delete"></td>
+     </tr>
+
+8. add <app-user></app-user> tag to the app.component.html
+       
