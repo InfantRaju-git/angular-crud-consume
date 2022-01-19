@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="text-center">User</h3>
+            <form>
+            Id : <input class="form-control" type="numner" [(ngModel)]="user.id" name="id">
+            UserId : <input class="form-control" type="number" [(ngModel)]="user.userId" name="userid">
+            Title : <input class="form-control" type="text" [(ngModel)]="user.title" name="title">
+            Body :<input class="form-control" type="text" [(ngModel)]="user.body" name="body">
+            <br>
+            <input class="btn btn-primary" type="button" value="Add" (click)="createuser(user)">
+            <input class="btn btn-primary" type="button" value="Update" (click)="changeuser(user)">
+            <input class="btn btn-primary" type="reset" value="Reset">
+            </form>
+
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">UserID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Body</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let i of alluser">
+                        <td>{{i.id}}</td>
+                        <td>{{i.userId}}</td>
+                        <td>{{i.title}}</td>
+                        <td>{{i.body}}</td>
+                        <td><input type="button" class="btn btn-warning" (click)="showuser(i.id)" value="Update"></td>
+                        <td><input type="button" class="btn btn-danger" (click)="removeuser(i.id)" value="Delete"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
